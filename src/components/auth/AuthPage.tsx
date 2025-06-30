@@ -1,14 +1,14 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import DocumentUploadModal from './DocumentUploadModal';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -21,6 +21,18 @@ const AuthPage: React.FC = () => {
   const [showDocumentModal, setShowDocumentModal] = useState(false);
   const [mitraEmail, setMitraEmail] = useState<string | null>(null);
   const { toast } = useToast();
+  const { user, profile, signIn } = useAuth();
+
+  // Redirect logic - check if user is already authenticated
+  useEffect(() => {
+    console.log('AuthPage: checking user state', { user: user?.id, profile: profile?.role });
+    
+    if (user && profile) {
+      console.log('User is authenticated, should redirect to dashboard');
+      // This component should not render if user is authenticated
+      // The redirect logic is handled in App.tsx
+    }
+  }, [user, profile]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,11 +46,10 @@ const AuthPage: React.FC = () => {
     }
 
     setLoading(true);
+    console.log('Starting login process...');
+    
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
+      const { error } = await signIn(email, password);
 
       if (error) {
         console.error('Login error:', error);
@@ -50,19 +61,22 @@ const AuthPage: React.FC = () => {
           variant: "destructive"
         });
       } else {
+        console.log('Login successful in AuthPage');
         toast({
           title: "Berhasil",
           description: "Login berhasil!"
         });
+        // Don't manually redirect here - let App.tsx handle it based on auth state
       }
     } catch (error: any) {
-      console.error('Login error:', error);
+      console.error('Login catch error:', error);
       toast({
         title: "Error",
         description: "Terjadi kesalahan saat login",
         variant: "destructive"
       });
     }
+    
     setLoading(false);
   };
 

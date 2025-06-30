@@ -53,11 +53,14 @@ const AppContent = () => {
     createDefaultAdmin();
   }, []);
 
+  // Show splash screen
   if (showSplash) {
     return <SplashScreen onComplete={() => setShowSplash(false)} />;
   }
 
+  // Show loading spinner while checking auth
   if (loading) {
+    console.log('App: showing loading state');
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
@@ -68,9 +71,13 @@ const AppContent = () => {
     );
   }
 
+  // Show auth page if no user or profile
   if (!user || !profile) {
+    console.log('App: showing AuthPage', { user: user?.id, profile: profile?.role });
     return <AuthPage />;
   }
+
+  console.log('App: user authenticated, showing dashboard for role:', profile.role);
 
   // Check if mitra is verified
   if (profile.role === 'mitra' && !profile.is_verified) {
@@ -121,11 +128,14 @@ const AppContent = () => {
   // Render appropriate dashboard based on role
   switch (profile.role) {
     case 'admin':
+      console.log('App: rendering AdminDashboard');
       return <AdminDashboard />;
     case 'mitra':
+      console.log('App: rendering MitraDashboard');
       return <MitraDashboard />;
     case 'user':
     default:
+      console.log('App: rendering UserDashboard');
       return <UserDashboard />;
   }
 };

@@ -9,7 +9,490 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      balance_transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          description: string | null
+          id: string
+          order_id: string | null
+          type: string
+          user_id: string | null
+          voucher_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          type: string
+          user_id?: string | null
+          voucher_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          type?: string
+          user_id?: string | null
+          voucher_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "balance_transactions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "balance_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "balance_transactions_voucher_id_fkey"
+            columns: ["voucher_id"]
+            isOneToOne: false
+            referencedRelation: "vouchers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      banners: {
+        Row: {
+          created_at: string | null
+          id: string
+          image_url: string
+          is_active: boolean | null
+          link_url: string | null
+          order_index: number
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          image_url: string
+          is_active?: boolean | null
+          link_url?: string | null
+          order_index: number
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          image_url?: string
+          is_active?: boolean | null
+          link_url?: string | null
+          order_index?: number
+          title?: string
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string
+          order_id: string | null
+          receiver_id: string | null
+          sender_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          order_id?: string | null
+          receiver_id?: string | null
+          sender_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          order_id?: string | null
+          receiver_id?: string | null
+          sender_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_messages_receiver_id_fkey"
+            columns: ["receiver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mitra_profiles: {
+        Row: {
+          balance: number | null
+          description: string | null
+          is_active: boolean | null
+          mitra_id: string
+          profile_image: string | null
+          service_types: string[] | null
+        }
+        Insert: {
+          balance?: number | null
+          description?: string | null
+          is_active?: boolean | null
+          mitra_id: string
+          profile_image?: string | null
+          service_types?: string[] | null
+        }
+        Update: {
+          balance?: number | null
+          description?: string | null
+          is_active?: boolean | null
+          mitra_id?: string
+          profile_image?: string | null
+          service_types?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mitra_profiles_mitra_id_fkey"
+            columns: ["mitra_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mitra_verifications: {
+        Row: {
+          id: string
+          kk_image: string | null
+          ktp_image: string | null
+          mitra_id: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+          submitted_at: string | null
+        }
+        Insert: {
+          id?: string
+          kk_image?: string | null
+          ktp_image?: string | null
+          mitra_id?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          submitted_at?: string | null
+        }
+        Update: {
+          id?: string
+          kk_image?: string | null
+          ktp_image?: string | null
+          mitra_id?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          submitted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mitra_verifications_mitra_id_fkey"
+            columns: ["mitra_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mitra_verifications_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address: string
+          completed_at: string | null
+          created_at: string | null
+          duration_minutes: number
+          id: string
+          latitude: number | null
+          longitude: number | null
+          mitra_id: string | null
+          notes: string | null
+          payment_method: string
+          rating: number | null
+          review: string | null
+          scheduled_date: string
+          scheduled_time: string
+          service_id: string | null
+          service_name: string
+          started_at: string | null
+          status: string | null
+          total_price: number
+          user_id: string | null
+        }
+        Insert: {
+          address: string
+          completed_at?: string | null
+          created_at?: string | null
+          duration_minutes: number
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          mitra_id?: string | null
+          notes?: string | null
+          payment_method: string
+          rating?: number | null
+          review?: string | null
+          scheduled_date: string
+          scheduled_time: string
+          service_id?: string | null
+          service_name: string
+          started_at?: string | null
+          status?: string | null
+          total_price: number
+          user_id?: string | null
+        }
+        Update: {
+          address?: string
+          completed_at?: string | null
+          created_at?: string | null
+          duration_minutes?: number
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          mitra_id?: string | null
+          notes?: string | null
+          payment_method?: string
+          rating?: number | null
+          review?: string | null
+          scheduled_date?: string
+          scheduled_time?: string
+          service_id?: string | null
+          service_name?: string
+          started_at?: string | null
+          status?: string | null
+          total_price?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_mitra_id_fkey"
+            columns: ["mitra_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          full_name: string | null
+          id: string
+          is_blocked: boolean | null
+          is_verified: boolean | null
+          phone: string | null
+          role: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          is_blocked?: boolean | null
+          is_verified?: boolean | null
+          phone?: string | null
+          role?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          is_blocked?: boolean | null
+          is_verified?: boolean | null
+          phone?: string | null
+          role?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          base_price: number
+          created_at: string | null
+          description: string | null
+          duration_minutes: number
+          id: string
+          is_active: boolean | null
+          name: string
+        }
+        Insert: {
+          base_price: number
+          created_at?: string | null
+          description?: string | null
+          duration_minutes: number
+          id?: string
+          is_active?: boolean | null
+          name: string
+        }
+        Update: {
+          base_price?: number
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean | null
+          name?: string
+        }
+        Relationships: []
+      }
+      user_profiles: {
+        Row: {
+          address: string | null
+          balance: number | null
+          latitude: number | null
+          longitude: number | null
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          balance?: number | null
+          latitude?: number | null
+          longitude?: number | null
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          balance?: number | null
+          latitude?: number | null
+          longitude?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      voucher_usage: {
+        Row: {
+          amount: number
+          id: string
+          used_at: string | null
+          user_id: string | null
+          voucher_id: string | null
+        }
+        Insert: {
+          amount: number
+          id?: string
+          used_at?: string | null
+          user_id?: string | null
+          voucher_id?: string | null
+        }
+        Update: {
+          amount?: number
+          id?: string
+          used_at?: string | null
+          user_id?: string | null
+          voucher_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voucher_usage_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "voucher_usage_voucher_id_fkey"
+            columns: ["voucher_id"]
+            isOneToOne: false
+            referencedRelation: "vouchers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vouchers: {
+        Row: {
+          amount: number
+          code: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          title: string
+          usage_limit: number | null
+          used_count: number | null
+          valid_until: string | null
+        }
+        Insert: {
+          amount: number
+          code: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          title: string
+          usage_limit?: number | null
+          used_count?: number | null
+          valid_until?: string | null
+        }
+        Update: {
+          amount?: number
+          code?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          title?: string
+          usage_limit?: number | null
+          used_count?: number | null
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
